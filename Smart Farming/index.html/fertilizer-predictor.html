@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fertilizer Suggestions</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: url('https://images.pexels.com/photos/414137/pexels-photo-414137.jpeg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    /* Overlay to make content readable */
+    body::after {
+      content: "";
+      position: fixed;
+      top:0; left:0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: -1;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 30px 0;
+      font-size: 36px;
+      color: #fff;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto 50px;
+      background-color: rgba(0, 0, 0, 0.75);
+      border-radius: 10px;
+      padding: 20px 30px;
+      color: white;
+    }
+
+    /* Search box and clear button container */
+    #search-container {
+      position: relative;
+      max-width: 400px;
+      margin: 0 auto 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    #search-input {
+      flex-grow: 1;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    #clear-btn {
+      background: #FFA500;
+      border: none;
+      border-radius: 8px;
+      color: black;
+      font-weight: bold;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #clear-btn:hover {
+      background-color: #e69500;
+    }
+
+    /* Suggestions dropdown */
+    #suggestions {
+      position: absolute;
+      top: 42px;
+      width: 100%;
+      background: white;
+      color: black;
+      border-radius: 0 0 8px 8px;
+      max-height: 180px;
+      overflow-y: auto;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 10;
+    }
+
+    #suggestions div {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    #suggestions div:hover {
+      background-color: #FFA500;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      table-layout: fixed;
+      font-size: 16px;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border: 1px solid #555;
+      text-align: left;
+      word-wrap: break-word;
+    }
+
+    th {
+      background-color: #FFA500;
+      color: #000;
+      font-size: 18px;
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .back-btn {
+      margin: 40px auto 0;
+      display: block;
+      background-color: #FFA500;
+      color: black;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      width: fit-content;
+    }
+
+    .back-btn:hover {
+      background-color: #e69500;
+    }
+
+    /* Scrollbar for suggestions */
+    #suggestions::-webkit-scrollbar {
+      width: 6px;
+    }
+    #suggestions::-webkit-scrollbar-thumb {
+      background-color: #FFA500;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌿 Fertilizer Suggestions</h1>
+  <div class="container">
+    <div id="search-container">
+      <input type="text" id="search-input" placeholder="Search crop name..." autocomplete="off" />
+      <button id="clear-btn" title="Clear search">Clear</button>
+      <div id="suggestions"></div>
+    </div>
+
+    <table id="fertilizer-table">
+      <thead>
+        <tr>
+          <th>Crop Name (English / हिंदी)</th>
+          <th>Recommended Fertilizer</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be injected here -->
+      </tbody>
+    </table>
+  </div>
+
+  <a class="back-btn" href="dashboard.html">⬅ Back to Dashboard</a>
+
+  <script>
+    // Data array of crops with English, Hindi, fertilizer info
+    const cropsData = [
+      { crop: "Rice", hindi: "चावल", fertilizer: "NPK 16-16-16", notes: "Balanced nutrients for growth" },
+      { crop: "Wheat", hindi: "गेहूँ", fertilizer: "Urea + DAP", notes: "Split nitrogen application recommended" },
+      { crop: "Maize", hindi: "मक्का", fertilizer: "NPK 20-10-10", notes: "Higher nitrogen for early growth" },
+      { crop: "Groundnut", hindi: "मूंगफली", fertilizer: "Superphosphate + Potash", notes: "Supports pod development" },
+      { crop: "Potato", hindi: "आलू", fertilizer: "NPK 10-26-26", notes: "Higher phosphorus and potassium" },
+      { crop: "Tomato", hindi: "टमाटर", fertilizer: "NPK 20-20-20", notes: "Balanced feeding for fruiting" },
+      { crop: "Onion", hindi: "प्याज", fertilizer: "NPK 20-10-20", notes: "Higher potassium for bulb growth" },
+      { crop: "Cotton", hindi: "कपास", fertilizer: "NPK 12-24-12", notes: "Higher phosphorus for flowering" },
+      { crop: "Sunflower", hindi: "सूरजमुखी", fertilizer: "NPK 15-15-15", notes: "Balanced nutrients for oil content" },
+      { crop: "Soybean", hindi: "सोयाबीन", fertilizer: "Rhizobium inoculation + NPK 15-15-15", notes: "Enhances nitrogen fixation" },
+      { crop: "Sugarcane", hindi: "गन्ना", fertilizer: "Urea + Potash", notes: "Split nitrogen application beneficial" },
+      { crop: "Chili", hindi: "मिर्च", fertilizer: "NPK 19-19-19", notes: "Balanced fertilizer for fruiting" },
+      { crop: "Brinjal (Eggplant)", hindi: "बैगन", fertilizer: "NPK 16-16-16", notes: "Balanced nutrient supply" },
+      { crop: "Cabbage", hindi: "पत्तागोभी", fertilizer: "NPK 10-20-20", notes: "Higher phosphorus and potassium" },
+      { crop: "Cauliflower", hindi: "फूलगोभी", fertilizer: "NPK 15-15-15", notes: "Balanced nutrients" },
+      { crop: "Peas", hindi: "मटर", fertilizer: "Rhizobium inoculation + NPK 10-10-20", notes: "Enhances nitrogen fixation" },
+      { crop: "Barley", hindi: "जौ", fertilizer: "NPK 20-20-0", notes: "Phosphorus deficient soils need extra P" },
+      { crop: "Lentils", hindi: "दाल", fertilizer: "Rhizobium inoculation + NPK 10-20-10", notes: "For nitrogen fixation and growth" },
+      { crop: "Mustard", hindi: "सरसों", fertilizer: "NPK 20-10-10", notes: "Balanced fertilizer recommended" },
+      { crop: "Ragi (Finger Millet)", hindi: "रागी", fertilizer: "NPK 16-16-16", notes: "Balanced fertilizer" },
+      { crop: "Jowar (Sorghum)", hindi: "ज्वार", fertilizer: "NPK 12-24-12", notes: "Higher phosphorus helps" },
+      { crop: "Bajra (Pearl Millet)", hindi: "बाजरा", fertilizer: "NPK 20-10-10", notes: "Balanced nutrition" },
+      { crop: "Green Gram", hindi: "हरि मूंग", fertilizer: "Rhizobium inoculation", notes: "Biological nitrogen fixation" },
+      { crop: "Carrot", hindi: "गाजर", fertilizer: "NPK 10-20-20", notes: "High phosphorus and potassium" },
+      { crop: "Beetroot", hindi: "चुकंदर", fertilizer: "NPK 10-20-20", notes: "Supports root growth" },
+      { crop: "Spinach", hindi: "पालक", fertilizer: "NPK 12-24-12", notes: "Balanced fertilizer" },
+      { crop: "Tea", hindi: "चाय", fertilizer: "NPK 15-15-15 + Organic matter", notes: "Long term soil health" },
+      { crop: "Coffee", hindi: "कॉफ़ी", fertilizer: "NPK 20-20-20 + Organic matter", notes: "Promotes berry development" },
+      { crop: "Banana", hindi: "केला", fertilizer: "NPK 12-36-12", notes: "High phosphorus for root growth" },
+      { crop: "Mango", hindi: "आम", fertilizer: "NPK 10-10-10 + Micronutrients", notes: "Balanced fertilizer with Zn and B" },
+      { crop: "Papaya", hindi: "पपीता", fertilizer: "NPK 20-20-20", notes: "Balanced nutrition" },
+      { crop: "Pineapple", hindi: "अनानास", fertilizer: "NPK 10-20-20", notes: "Higher potassium for fruit quality" },
+      { crop: "Watermelon", hindi: "तरबूज", fertilizer: "NPK 15-15-15", notes: "Balanced nutrients" },
+      { crop: "Muskmelon", hindi: "खरबूजा", fertilizer: "NPK 20-20-20", notes: "Balanced fertilizer for fruiting" },
+      { crop: "Garlic", hindi: "लहसुन", fertilizer: "NPK 15-15-15", notes: "Balanced nutrient supply" },
+      { crop: "Lady Finger (Okra)", hindi: "भिंडी", fertilizer: "NPK 10-10-20", notes: "Higher potassium fertilizer" },
+      { crop: "Pumpkin", hindi: "कद्दू", fertilizer: "NPK 10-20-20", notes: "Phosphorus and potassium rich" },
+      { crop: "Bitter Gourd", hindi: "करेला", fertilizer: "NPK 16-16-16", notes: "Balanced fertilizer" },
+      // Additional crops added here
+      { crop: "Rajma (Kidney Beans)", hindi: "राजमा", fertilizer: "Rhizobium inoculation + NPK 10-20-10", notes: "Good nitrogen fixer, balanced fertilizer" },
+      { crop: "Chickpea", hindi: "चना", fertilizer: "Rhizobium inoculation + NPK 15-15-15", notes: "Nitrogen fixation and phosphorus support" },
+      { crop: "Black Gram", hindi: "उड़द", fertilizer: "Rhizobium inoculation", notes: "Biological nitrogen fixation" },
+      { crop: "Sesame", hindi: "तिल", fertilizer: "NPK 20-10-10", notes: "Balanced fertilizer for oil content" },
+      { crop: "Sugar Beet", hindi: "चीनी चुकंदर", fertilizer: "NPK 15-15-15", notes: "Supports sugar accumulation" }
+    ];
+
+    const searchInput = document.getElementById("search-input");
+    const suggestionsBox = document.getElementById("suggestions");
+    const clearBtn = document.getElementById("clear-btn");
+    const tableBody = document.querySelector("#fertilizer-table tbody");
+
+    // Render table rows for given crop array
+    function renderTable(crops) {
+      tableBody.innerHTML = "";
+      if (crops.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 3;
+        td.style.textAlign = "center";
+        td.textContent = "No matching crops found.";
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+        return;
+      }
+      crops.forEach(({ crop, hindi, fertilizer, notes }) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${crop} / ${hindi}</td>
+          <td>${fertilizer}</td>
+          <td>${notes}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // Show suggestions based on input
+    function showSuggestions(query) {
+      const val = query.trim().toLowerCase();
+      if (!val) {
+        suggestionsBox.style.display = "none";
+        renderTable(cropsData);
+        return;
+      }
+      // Match startsWith English or Hindi
+      const matches = cropsData.filter(({ crop, hindi }) =>
+        crop.toLowerCase().startsWith(val) || hindi.startsWith(val)
+      );
+
+      suggestionsBox.innerHTML = "";
+      matches.forEach(({ crop, hindi }) => {
+        const div = document.createElement("div");
+        div.textContent = `${crop} / ${hindi}`;
+        div.addEventListener("click", () => {
+          searchInput.value = `${crop} / ${hindi}`;
+          suggestionsBox.style.display = "none";
+          renderTable(matches);
+        });
+        suggestionsBox.appendChild(div);
+      });
+      suggestionsBox.style.display = matches.length ? "block" : "none";
+      renderTable(matches);
+    }
+
+    searchInput.addEventListener("input", e => {
+      showSuggestions(e.target.value);
+    });
+
+    // Hide suggestions if click outside search container
+    document.addEventListener("click", e => {
+      if (!document.getElementById("search-container").contains(e.target)) {
+        suggestionsBox.style.display = "none";
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      suggestionsBox.style.display = "none";
+      renderTable(cropsData);
+      searchInput.focus();
+    });
+
+    // Initial render all crops
+    renderTable(cropsData);
+  </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crop Suggestions</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background Blur Layer */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: url('https://images.pexels.com/photos/1581793/pexels-photo-1581793.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      filter: blur(8px);
+      z-index: -1;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 30px 0;
+      font-size: 36px;
+      color: #ffffff;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    table {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: rgba(0, 0, 0, 0.75);
+      color: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border: 1px solid #555;
+      text-align: left;
+    }
+
+    th {
+      background-color: #FFA500;
+      color: #000;
+      font-size: 18px;
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .back-btn {
+      margin: 40px auto 0;
+      display: block;
+      background-color: #FFA500;
+      color: black;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      width: fit-content;
+    }
+
+    .back-btn:hover {
+      background-color: #e69500;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌱 Crop Suggestions</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Crop Name</th>
+        <th>Growth Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- First 50 crops (same as previous response) -->
+      <tr><td>Rice</td><td>90–150 days</td></tr>
+      <tr><td>Ragi (Finger Millet)</td><td>100–120 days</td></tr>
+      <tr><td>Jowar (Sorghum)</td><td>100–130 days</td></tr>
+      <tr><td>Maize (Corn)</td><td>90–120 days</td></tr>
+      <tr><td>Bajra (Pearl Millet)</td><td>90–100 days</td></tr>
+      <tr><td>Wheat</td><td>120–150 days</td></tr>
+      <tr><td>Sugarcane</td><td>10–18 months</td></tr>
+      <tr><td>Cotton</td><td>150–180 days</td></tr>
+      <tr><td>Sunflower</td><td>80–100 days</td></tr>
+      <tr><td>Groundnut</td><td>100–120 days</td></tr>
+      <tr><td>Soybean</td><td>90–120 days</td></tr>
+      <tr><td>Red Gram (Tur Dal)</td><td>150–180 days</td></tr>
+      <tr><td>Black Gram (Urad Dal)</td><td>90–120 days</td></tr>
+      <tr><td>Green Gram (Moong Dal)</td><td>60–90 days</td></tr>
+      <tr><td>Barley</td><td>90–100 days</td></tr>
+      <tr><td>Lentils</td><td>100–120 days</td></tr>
+      <tr><td>Mustard</td><td>90–100 days</td></tr>
+      <tr><td>Peas</td><td>75–100 days</td></tr>
+      <tr><td>Carrot</td><td>70–80 days</td></tr>
+      <tr><td>Beetroot</td><td>50–70 days</td></tr>
+      <tr><td>Tomato</td><td>60–85 days</td></tr>
+      <tr><td>Potato</td><td>90–120 days</td></tr>
+      <tr><td>Onion</td><td>100–175 days</td></tr>
+      <tr><td>Garlic</td><td>120–150 days</td></tr>
+      <tr><td>Brinjal (Eggplant)</td><td>100–140 days</td></tr>
+      <tr><td>Chili</td><td>80–100 days</td></tr>
+      <tr><td>Cabbage</td><td>70–90 days</td></tr>
+      <tr><td>Cauliflower</td><td>75–90 days</td></tr>
+      <tr><td>Cucumber</td><td>50–70 days</td></tr>
+      <tr><td>Bitter Gourd</td><td>55–60 days</td></tr>
+      <tr><td>Lady Finger (Okra)</td><td>50–65 days</td></tr>
+      <tr><td>Pumpkin</td><td>90–120 days</td></tr>
+      <tr><td>Watermelon</td><td>70–90 days</td></tr>
+      <tr><td>Muskmelon</td><td>70–90 days</td></tr>
+      <tr><td>Spinach</td><td>30–45 days</td></tr>
+      <tr><td>Coriander</td><td>30–45 days</td></tr>
+      <tr><td>Methi (Fenugreek)</td><td>30–50 days</td></tr>
+      <tr><td>Turnip</td><td>40–60 days</td></tr>
+      <tr><td>Radish</td><td>25–40 days</td></tr>
+      <tr><td>Lettuce</td><td>45–55 days</td></tr>
+      <tr><td>Celery</td><td>120–140 days</td></tr>
+      <tr><td>Parsley</td><td>70–90 days</td></tr>
+      <tr><td>Ginger</td><td>8–10 months</td></tr>
+      <tr><td>Turmeric</td><td>7–9 months</td></tr>
+      <tr><td>Tea</td><td>Pluckable every 7–15 days</td></tr>
+      <tr><td>Coffee</td><td>9–11 months</td></tr>
+      <tr><td>Banana</td><td>9–12 months</td></tr>
+      <tr><td>Mango</td><td>3–5 years to fruit</td></tr>
+      <tr><td>Papaya</td><td>6–9 months</td></tr>
+      <tr><td>Pineapple</td><td>16–18 months</td></tr>
+    </tbody>
+  </table>
+
+  <a class="back-btn" href="dashboard.html">⬅ Back to Dashboard</a>
+
+</body>
+</html>
+

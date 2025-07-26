@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('https://images.pexels.com/photos/29000294/pexels-photo-29000294.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      width: 300px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .login-btn {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .login-btn:hover {
+      background-color: #388e3c;
+    }
+
+    .link {
+      margin-top: 15px;
+      display: block;
+      color: #2e7d32;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>Login</h2>
+    <input type="text" id="login-username" placeholder="Username" required>
+    <input type="password" placeholder="Password" required>
+    <button class="login-btn" onclick="loginUser()">Login</button>
+    <a href="register.html" class="link">Don't have an account? Register</a>
+  </div>
+
+  <script>
+    function loginUser() {
+      const username = document.getElementById("login-username").value;
+      if (username.trim()) {
+        localStorage.setItem("username", username);
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Please enter your username");
+      }
+    }
+  </script>
+
+</body>
+</html>

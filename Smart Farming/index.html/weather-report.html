@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Weather Report</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 40px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 26px;
+        }
+
+        select, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        select {
+            width: 70%;
+        }
+
+        button {
+            background-color: orange;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .report {
+            background: rgba(255, 255, 255, 0.2);
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .back-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Live Weather Report</h1>
+        <label for="district">Select District:</label>
+        <br>
+        <select id="district">
+            <option value="">-- Select District --</option>
+        </select>
+        <br>
+        <button onclick="getWeather()">Get Weather</button>
+
+        <div id="weatherReport" class="report" style="display: none;">
+            <h3>🌦️ Weather Report for <span id="cityName"></span></h3>
+            <p><strong>Temperature:</strong> <span id="temp"></span> °C</p>
+            <p><strong>Humidity:</strong> <span id="humidity"></span>%</p>
+            <p><strong>Wind Speed:</strong> <span id="wind"></span> m/s</p>
+            <p><strong>Condition:</strong> <span id="condition"></span></p>
+        </div>
+
+        <a href="dashboard.html" class="back-btn">⬅ Back to Dashboard</a>
+    </div>
+
+    <script>
+        const weatherData = {
+            "Adilabad": { temperature: 32, humidity: 58, windSpeed: 10, description: "Warm and Cloudy" },
+            "Agra": { temperature: 39, humidity: 42, windSpeed: 13, description: "Scorching Sun" },
+            "Ajmer": { temperature: 36, humidity: 42, windSpeed: 10, description: "Dry and Sunny" },
+            "Alwar": { temperature: 37, humidity: 40, windSpeed: 12, description: "Hot and Clear" },
+            "Amritsar": { temperature: 37, humidity: 50, windSpeed: 10, description: "Sunny" },
+            "Anantapur": { temperature: 35, humidity: 49, windSpeed: 12, description: "Hot and Dry" },
+            "Bahraich": { temperature: 35, humidity: 53, windSpeed: 9, description: "Humid with Sunshine" },
+            "Basti": { temperature: 33, humidity: 55, windSpeed: 10, description: "Partly Cloudy" },
+            "Belagavi": { temperature: 30, humidity: 61, windSpeed: 10, description: "Cloudy with Light Rain" },
+            "Bidar": { temperature: 32, humidity: 55, windSpeed: 12, description: "Sunny" },
+            "Bhiwani": { temperature: 38, humidity: 38, windSpeed: 11, description: "Sunny and Windy" },
+            "Bikaner": { temperature: 41, humidity: 30, windSpeed: 14, description: "Desert Winds" },
+            "Budaun": { temperature: 34, humidity: 52, windSpeed: 9, description: "Cloudy Skies" },
+            "Chengalpattu": { temperature: 33, humidity: 67, windSpeed: 9, description: "Humid and Cloudy" },
+            "Chikkaballapur": { temperature: 31, humidity: 63, windSpeed: 10, description: "Clear Skies" },
+            "Chittoor": { temperature: 34, humidity: 62, windSpeed: 10, description: "Warm and Breezy" },
+            "Churu": { temperature: 42, humidity: 28, windSpeed: 14, description: "Extreme Heat" },
+            "Coimbatore": { temperature: 30, humidity: 65, windSpeed: 8, description: "Partly Cloudy" },
+            "Darbhanga": { temperature: 34, humidity: 60, windSpeed: 8, description: "Cloudy with Rain Chances" },
+            "Davanagere": { temperature: 32, humidity: 60, windSpeed: 8, description: "Dry and Sunny" },
+            "Dehradun": { temperature: 28, humidity: 55, windSpeed: 10, description: "Mild and Breezy" },
+            "Delhi": { temperature: 38, humidity: 40, windSpeed: 10, description: "Hot and Dry" },
+            "Ernakulam": { temperature: 30, humidity: 83, windSpeed: 8, description: "Rain Showers" },
+            "Etawah": { temperature: 36, humidity: 47, windSpeed: 10, description: "Hazy Sunlight" },
+            "Firozabad": { temperature: 35, humidity: 50, windSpeed: 9, description: "Dry and Bright" },
+            "Gorakhpur": { temperature: 34, humidity: 54, windSpeed: 10, description: "Humid and Warm" },
+            "Gwalior": { temperature: 37, humidity: 44, windSpeed: 12, description: "Hot and Cloudy" },
+            "Haveri": { temperature: 31, humidity: 62, windSpeed: 10, description: "Mildly Cloudy" },
+            "Hyderabad": { temperature: 33, humidity: 60, windSpeed: 11, description: "Hot" },
+            "Jaipur": { temperature: 40, humidity: 35, windSpeed: 15, description: "Blazing Heat" },
+            "Jhansi": { temperature: 38, humidity: 42, windSpeed: 11, description: "Hot and Breezy" },
+            "Kadapa": { temperature: 35, humidity: 59, windSpeed: 11, description: "Hot and Sunny" },
+            "Kanpur": { temperature: 36, humidity: 43, windSpeed: 9, description: "Dusty Winds" },
+            "Karnal": { temperature: 34, humidity: 49, windSpeed: 10, description: "Warm and Cloudy" },
+            "Kochi": { temperature: 28, humidity: 80, windSpeed: 15, description: "Rainy" },
+            "Kolar": { temperature: 30, humidity: 66, windSpeed: 10, description: "Cool and Breezy" },
+            "Krishnagiri": { temperature: 32, humidity: 63, windSpeed: 8, description: "Mild Showers" },
+            "Lucknow": { temperature: 37, humidity: 45, windSpeed: 12, description: "Very Hot" },
+            "Madurai": { temperature: 36, humidity: 58, windSpeed: 9, description: "Hot and Humid" },
+            "Mandya": { temperature: 31, humidity: 68, windSpeed: 9, description: "Warm and Breezy" },
+            "Mathura": { temperature: 36, humidity: 46, windSpeed: 12, description: "Hot with Haze" },
+            "Moradabad": { temperature: 33, humidity: 58, windSpeed: 9, description: "Humid and Cloudy" },
+            "Mysuru": { temperature: 29, humidity: 70, windSpeed: 10, description: "Cloudy" },
+            "Nellore": { temperature: 34, humidity: 64, windSpeed: 11, description: "Dry and Sunny" },
+            "Patna": { temperature: 36, humidity: 52, windSpeed: 9, description: "Partly Cloudy" },
+            "Pilibhit": { temperature: 32, humidity: 59, windSpeed: 8, description: "Cool and Damp" },
+            "Ramachandrapuram": { temperature: 33, humidity: 59, windSpeed: 11, description: "Dry and Windy" },
+            "Shimla": { temperature: 22, humidity: 60, windSpeed: 8, description: "Cool and Pleasant" },
+            "Srinagar": { temperature: 21, humidity: 50, windSpeed: 6, description: "Chilly and Clear" },
+            "Thanjavur": { temperature: 35, humidity: 60, windSpeed: 9, description: "Sunny Intervals" },
+            "Thiruvananthapuram": { temperature: 29, humidity: 85, windSpeed: 14, description: "Rainy with Thunder" },
+            "Tirunelveli": { temperature: 34, humidity: 66, windSpeed: 10, description: "Hot and Humid" },
+            "Tiruvannamalai": { temperature: 33, humidity: 60, windSpeed: 9, description: "Sunny" },
+            "Udupi": { temperature: 29, humidity: 84, windSpeed: 12, description: "Heavy Rain" },
+            "Varanasi": { temperature: 35, humidity: 48, windSpeed: 11, description: "Hot and Hazy" },
+            "Vellore": { temperature: 33, humidity: 64, windSpeed: 11, description: "Partly Cloudy" },
+            "Vijayawada": { temperature: 36, humidity: 57, windSpeed: 12, description: "Sunny and Dry" },
+            "Warangal": { temperature: 34, humidity: 61, windSpeed: 10, description: "Hot with Clouds" }
+        };
+
+        const districtSelect = document.getElementById('district');
+        const cities = Object.keys(weatherData);
+        cities.forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            option.textContent = city;
+            districtSelect.appendChild(option);
+        });
+
+        function getWeather() {
+    const selectedCity = districtSelect.value;
+    if (selectedCity && weatherData[selectedCity]) {
+        const data = weatherData[selectedCity];
+        document.getElementById('cityName').textContent = selectedCity;
+        document.getElementById('temp').textContent = data.temperature;
+        document.getElementById('humidity').textContent = data.humidity;
+        document.getElementById('wind').textContent = data.windSpeed;
+        document.getElementById('condition').textContent = data.description;
+        document.getElementById('weatherReport').style.display = 'block';
+    } else {
+        alert("Please select a valid district.");
+    }
+}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crop & Market Price Info</title>
+  <style>
+    /* Global styles & background image */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      backdrop-filter: brightness(0.6);
+      -webkit-backdrop-filter: brightness(0.6);
+      overflow-x: hidden;
+    }
+
+    /* Container with slight transparent bg for readability */
+    .container {
+      background-color: rgba(0,0,0,0.55);
+      padding: 30px 25px;
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 25px;
+      text-align: center;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+    h1::before {
+      content: "🌾";
+      font-size: 36px;
+    }
+
+    /* Common button styles */
+    button {
+      padding: 10px 18px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+      user-select: none;
+      transition: background-color 0.25s ease;
+    }
+    button:hover {
+      filter: brightness(1.2);
+    }
+
+    /* Dropdown */
+    select {
+      padding: 8px 14px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      margin-right: 18px;
+      min-width: 220px;
+    }
+
+    /* Market price page */
+    #market-page {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Table styles */
+    table {
+      margin-top: 30px;
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+      color: #222;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: 600;
+    }
+
+    /* Main crop-fertilizer page styles */
+    #main-page h2 {
+      text-align: center;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 25px;
+      font-size: 24px;
+      color: #d4f3d4;
+      text-shadow: 0 0 6px #2a6b2a;
+    }
+
+    .crop-list, .fertilizer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+    }
+
+    .crop-card, .fertilizer-card {
+      background: rgba(255 255 255 / 0.1);
+      padding: 18px 20px;
+      border-radius: 10px;
+      width: 220px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      text-align: center;
+      color: #e2f0e2;
+      user-select: none;
+      transition: background 0.3s ease;
+    }
+    .crop-card:hover, .fertilizer-card:hover {
+      background: rgba(255 255 255 / 0.2);
+    }
+
+    .crop-name {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+    .crop-hindi {
+      font-style: italic;
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #a7d7a7;
+    }
+
+    .variety {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .price-info {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .market-info {
+      font-size: 14px;
+      color: #c7e6c7;
+      margin-bottom: 6px;
+    }
+
+    /* Navigation buttons */
+    .nav-btn {
+      margin: 30px auto 0;
+      display: block;
+      background-color: #4CAF50;
+      color: white;
+      font-weight: 600;
+      padding: 12px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+    .nav-btn:hover {
+      background-color: #3a8a38;
+    }
+
+    /* Back button market page */
+    #back-btn {
+      margin-top: 30px;
+      background-color: #ff4136;
+      color: white;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 8px;
+      user-select: none;
+    }
+    #back-btn:hover {
+      background-color: #d0362c;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 720px) {
+      .crop-card, .fertilizer-card {
+        width: 100%;
+      }
+      select {
+        min-width: 100%;
+        margin-bottom: 15px;
+      }
+      #market-page {
+        width: 100%;
+      }
+      table {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Main page: Crop & Fertilizer info -->
+    <div id="main-page">
+      <h1>🌾 Crop & Fertilizer Information</h1>
+
+      <h2>Crops & Prices</h2>
+      <div class="crop-list" id="crop-list"></div>
+
+      <h2>Fertilizers</h2>
+      <div class="fertilizer-list" id="fertilizer-list"></div>
+
+      <button class="nav-btn" id="go-to-market">View Market Prices</button>
+    </div>
+
+    <!-- Market Price page -->
+    <div id="market-page">
+      <h1>📊 Select a Crop to View Market Prices</h1>
+      <div>
+        <select id="crop-select">
+          <option value="">-- Select Crop --</option>
+        </select>
+        <button id="view-prices-btn">🔍 View Prices</button>
+      </div>
+
+      <table id="price-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Crop</th>
+            <th>Variety</th>
+            <th>Min ₹</th>
+            <th>Max ₹</th>
+            <th>Modal ₹</th>
+            <th>Market</th>
+            <th>District</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <button id="back-btn">⬅ Back</button>
+    </div>
+  </div>
+
+  <script>
+    // Crop & fertilizer data (integrated)
+    const cropsData = [
+  { crop: "Rice", hindi: "चावल", variety: "Basmati", min: 2100, max: 2500, modal: 2300, market: "Delhi Market", district: "Delhi" },
+  { crop: "Wheat", hindi: "गेहूँ", variety: "Durum", min: 1800, max: 2100, modal: 1950, market: "Kolkata Market", district: "Kolkata" },
+  { crop: "Maize", hindi: "मक्का", variety: "Sweet", min: 1600, max: 1900, modal: 1750, market: "Mumbai Market", district: "Mumbai" },
+  { crop: "Tomato", hindi: "टमाटर", variety: "Cherry", min: 1300, max: 1500, modal: 1400, market: "Bangalore Market", district: "Bangalore" },
+  { crop: "Potato", hindi: "आलू", variety: "Red", min: 900, max: 1200, modal: 1100, market: "Chennai Market", district: "Chennai" },
+  { crop: "Onion", hindi: "प्याज", variety: "Yellow", min: 1900, max: 2300, modal: 2100, market: "Ahmedabad Market", district: "Ahmedabad" },
+  { crop: "Sugarcane", hindi: "गन्ना", variety: "White", min: 1600, max: 2000, modal: 1800, market: "Lucknow Market", district: "Lucknow" },
+  { crop: "Rajma (Kidney Beans)", hindi: "राजमा", variety: "Local", min: 4400, max: 4800, modal: 4600, market: "Jaipur Market", district: "Jaipur" },
+  { crop: "Chili", hindi: "मिर्च", variety: "Green", min: 5000, max: 5400, modal: 5200, market: "Nagpur Market", district: "Nagpur" },
+  { crop: "Sunflower", hindi: "सूरजमुखी", variety: "Hybrid", min: 2800, max: 3200, modal: 3000, market: "Hyderabad Market", district: "Hyderabad" },
+  { crop: "Green Gram", hindi: "हरि मूंग", variety: "Desi", min: 4600, max: 5000, modal: 4800, market: "Patna Market", district: "Patna" },
+  { crop: "Garlic", hindi: "लहसुन", variety: "White", min: 6200, max: 6800, modal: 6500, market: "Indore Market", district: "Indore" },
+  { crop: "Mustard", hindi: "सरसों", variety: "Yellow", min: 2700, max: 3100, modal: 2900, market: "Bhopal Market", district: "Bhopal" },
+  { crop: "Pumpkin", hindi: "कद्दू", variety: "Winter", min: 800, max: 1000, modal: 900, market: "Chandigarh Market", district: "Chandigarh" },
+  { crop: "Bitter Gourd", hindi: "करेला", variety: "Green", min: 1200, max: 1400, modal: 1300, market: "Dehradun Market", district: "Dehradun" },
+  { crop: "Coconut", hindi: "नारियल", variety: "Matured", min: 15000, max: 18000, modal: 16500, market: "Udupi Market", district: "Udupi" },
+
+  // Additional crops
+  { crop: "Barley", hindi: "जौ", variety: "Hordeum", min: 1500, max: 1700, modal: 1600, market: "Punjab Market", district: "Amritsar" },
+  { crop: "Sorghum", hindi: "ज्वार", variety: "Hybrid", min: 1400, max: 1650, modal: 1525, market: "Nagpur Market", district: "Nagpur" },
+  { crop: "Pearl Millet", hindi: "बाजरा", variety: "Hybrid", min: 1300, max: 1600, modal: 1450, market: "Rajasthan Market", district: "Jaipur" },
+  { crop: "Soybean", hindi: "सोयाबीन", variety: "High Protein", min: 2800, max: 3200, modal: 3000, market: "Madhya Pradesh Market", district: "Indore" },
+  { crop: "Green Peas", hindi: "हरी मटर", variety: "Snow Pea", min: 2400, max: 2700, modal: 2550, market: "Kashmir Market", district: "Srinagar" },
+  { crop: "Brinjal (Eggplant)", hindi: "बैगन", variety: "Long Purple", min: 1000, max: 1300, modal: 1150, market: "Hyderabad Market", district: "Hyderabad" },
+  { crop: "Cauliflower", hindi: "फूलगोभी", variety: "White", min: 1100, max: 1400, modal: 1250, market: "Delhi Market", district: "Delhi" },
+  { crop: "Cabbage", hindi: "पत्तागोभी", variety: "Green", min: 900, max: 1200, modal: 1050, market: "Chennai Market", district: "Chennai" },
+  { crop: "Apple", hindi: "सेब", variety: "Red Delicious", min: 6000, max: 7000, modal: 6500, market: "Himachal Market", district: "Shimla" },
+  { crop: "Banana", hindi: "केला", variety: "Robusta", min: 900, max: 1200, modal: 1050, market: "Kerala Market", district: "Kochi" },
+  { crop: "Mango", hindi: "आम", variety: "Alphonso", min: 3500, max: 4000, modal: 3750, market: "Ratnagiri Market", district: "Ratnagiri" },
+  { crop: "Papaya", hindi: "पपीता", variety: "Red Lady", min: 1500, max: 1800, modal: 1650, market: "Kerala Market", district: "Thiruvananthapuram" },
+  { crop: "Pineapple", hindi: "अनानास", variety: "Queen", min: 2200, max: 2600, modal: 2400, market: "Assam Market", district: "Guwahati" },
+  { crop: "Watermelon", hindi: "तरबूज", variety: "Seedless", min: 900, max: 1300, modal: 1100, market: "Punjab Market", district: "Ludhiana" },
+  { crop: "Sweet Potato", hindi: "शकरकंद", variety: "Orange", min: 1100, max: 1400, modal: 1250, market: "Bihar Market", district: "Patna" },
+  { crop: "Jackfruit", hindi: "कटहल", variety: "Ripe", min: 1500, max: 1900, modal: 1700, market: "Kerala Market", district: "Kozhikode" },
+  { crop: "Coriander", hindi: "धनिया", variety: "Leafy", min: 800, max: 1100, modal: 950, market: "Rajasthan Market", district: "Jaipur" },
+  { crop: "Fenugreek", hindi: "मेथी", variety: "Dried Leaves", min: 1600, max: 2000, modal: 1800, market: "Punjab Market", district: "Amritsar" },
+  { crop: "Cumin", hindi: "जीरा", variety: "Black", min: 4000, max: 4500, modal: 4250, market: "Rajasthan Market", district: "Bikaner" },
+  { crop: "Mustard Seed", hindi: "सरसों का बीज", variety: "Yellow", min: 2700, max: 3100, modal: 2900, market: "Punjab Market", district: "Ludhiana" },
+  { crop: "Chickpea", hindi: "चना", variety: "Desi", min: 3600, max: 4000, modal: 3800, market: "Madhya Pradesh Market", district: "Bhopal" },
+  { crop: "Lentils", hindi: "मसूर", variety: "Red", min: 3200, max: 3700, modal: 3450, market: "Uttar Pradesh Market", district: "Lucknow" },
+  { crop: "Turmeric", hindi: "हल्दी", variety: "Finger", min: 4200, max: 4600, modal: 4400, market: "Tamil Nadu Market", district: "Coimbatore" },
+  { crop: "Ginger", hindi: "अदरक", variety: "Fresh", min: 2500, max: 2900, modal: 2700, market: "Kerala Market", district: "Alappuzha" },
+  { crop: "Cashew Nut", hindi: "काजू", variety: "Raw", min: 8000, max: 9000, modal: 8500, market: "Goa Market", district: "Panaji" },
+  { crop: "Areca Nut", hindi: "सुपारी", variety: "Brown", min: 5500, max: 6000, modal: 5750, market: "Kerala Market", district: "Kollam" },
+  { crop: "Coffee", hindi: "कॉफ़ी", variety: "Arabica", min: 12000, max: 14000, modal: 13000, market: "Karnataka Market", district: "Coorg" },
+  { crop: "Tea", hindi: "चाय", variety: "Assam", min: 16000, max: 18000, modal: 17000, market: "Assam Market", district: "Dibrugarh" },
+  { crop: "Sesame", hindi: "तिल", variety: "White", min: 3500, max: 3900, modal: 3700, market: "Rajasthan Market", district: "Jaipur" },
+  { crop: "Flaxseed", hindi: "अलसी", variety: "Brown", min: 3200, max: 3600, modal: 3400, market: "Punjab Market", district: "Amritsar" },
+  { crop: "Almonds", hindi: "बादाम", variety: "California", min: 12000, max: 13000, modal: 12500, market: "Jammu Market", district: "Jammu" },
+  { crop: "Walnuts", hindi: "अखरोट", variety: "English", min: 10000, max: 11500, modal: 10750, market: "Kashmir Market", district: "Srinagar" },
+  { crop: "Pomegranate", hindi: "अनार", variety: "Ruby", min: 2700, max: 3000, modal: 2850, market: "Maharashtra Market", district: "Solapur" },
+  { crop: "Guava", hindi: "अमरुद", variety: "Allahabad Safeda", min: 1500, max: 1800, modal: 1650, market: "Uttar Pradesh Market", district: "Allahabad" },
+  { crop: "Strawberry", hindi: "स्ट्रॉबेरी", variety: "Alpine", min: 6000, max: 6500, modal: 6250, market: "Himachal Market", district: "Shimla" },
+  { crop: "Black Gram", hindi: "उड़द", variety: "Local", min: 4000, max: 4500, modal: 4250, market: "Andhra Market", district: "Vijayawada" },
+  { crop: "Kidney Beans", hindi: "राजमा", variety: "Red", min: 4500, max: 5000, modal: 4750, market: "Rajasthan Market", district: "Udaipur" },
+  { crop: "Lentil (Masoor)", hindi: "मसूर", variety: "Red", min: 3200, max: 3700, modal: 3450, market: "Bihar Market", district: "Patna" },
+  { crop: "Safflower", hindi: "कुमकुम", variety: "Yellow", min: 2200, max: 2600, modal: 2400, market: "Maharashtra Market", district: "Pune" },
+  { crop: "Cotton", hindi: "कपास", variety: "Long Staple", min: 4800, max: 5300, modal: 5050, market: "Maharashtra Market", district: "Nagpur" },
+  { crop: "Tobacco", hindi: "तमाखू", variety: "Virginia", min: 8500, max: 9000, modal: 8750, market: "Andhra Market", district: "Guntur" },
+  { crop: "Jute", hindi: "पंजा", variety: "White", min: 1900, max: 2100, modal: 2000, market: "West Bengal Market", district: "Kolkata" },
+  { crop: "Sugar Beet", hindi: "चीनी चुकंदर", variety: "Hybrid", min: 1600, max: 1900, modal: 1750, market: "Punjab Market", district: "Ludhiana" },
+  { crop: "Chickpeas", hindi: "चना", variety: "Kabuli", min: 3800, max: 4200, modal: 4000, market: "Rajasthan Market", district: "Jaipur" },
+];
+
+
+    const fertilizers = [
+      { name: "DAP", chemical: "Diammonium Phosphate", npk: "18-46-0", usage: "Rice, Wheat", price: 1200 },
+      { name: "Urea", chemical: "Carbonyl Diamide", npk: "46-0-0", usage: "Rice, Maize", price: 800 },
+      { name: "MOP", chemical: "Muriate of Potash", npk: "0-0-60", usage: "Potato, Tomato", price: 1000 },
+      { name: "Ammonium Sulphate", chemical: "Ammonium Sulphate", npk: "21-0-0", usage: "Sugarcane, Wheat", price: 900 },
+      { name: "Super Phosphate", chemical: "Calcium Phosphate", npk: "16-20-0", usage: "Mustard, Groundnut", price: 1100 },
+    ];
+
+    // DOM Elements
+    const cropListDiv = document.getElementById("crop-list");
+    const fertilizerListDiv = document.getElementById("fertilizer-list");
+    const goToMarketBtn = document.getElementById("go-to-market");
+    const mainPageDiv = document.getElementById("main-page");
+    const marketPageDiv = document.getElementById("market-page");
+    const cropSelect = document.getElementById("crop-select");
+    const viewPricesBtn = document.getElementById("view-prices-btn");
+    const priceTable = document.getElementById("price-table");
+    const tbody = priceTable.querySelector("tbody");
+    const backBtn = document.getElementById("back-btn");
+
+    // Populate crop & fertilizer cards
+    function populateMainPage() {
+      // crops
+      cropsData.forEach(({ crop, hindi, variety, min, max, modal }) => {
+        const card = document.createElement("div");
+        card.className = "crop-card";
+        card.innerHTML = `
+          <div class="crop-name">${crop}</div>
+          <div class="crop-hindi">${hindi}</div>
+          <div class="variety">Variety: ${variety}</div>
+          <div class="price-info">Prices (₹): Min ${min.toLocaleString()}, Max ${max.toLocaleString()}, Modal ${modal.toLocaleString()}</div>
+        `;
+        cropListDiv.appendChild(card);
+      });
+
+      // fertilizers
+      fertilizers.forEach(({ name, chemical, npk, usage, price }) => {
+        const card = document.createElement("div");
+        card.className = "fertilizer-card";
+        card.innerHTML = `
+          <div class="crop-name">${name}</div>
+          <div>Chemical: ${chemical}</div>
+          <div>NPK Ratio: ${npk}</div>
+          <div>Usage: ${usage}</div>
+          <div>Price: ₹${price.toLocaleString()}</div>
+        `;
+        fertilizerListDiv.appendChild(card);
+      });
+    }
+
+    // Populate crop dropdown on market page
+    function populateCropDropdown() {
+      cropsData.forEach(({ crop, hindi }) => {
+        const option = document.createElement("option");
+        option.value = crop;
+        option.textContent = `${crop} / ${hindi}`;
+        cropSelect.appendChild(option);
+      });
+    }
+
+    // Show market prices table for selected crop
+    function showPrices() {
+      const selectedCrop = cropSelect.value;
+      if (!selectedCrop) {
+        alert("Please select a crop!");
+        return;
+      }
+      // Filter data for the selected crop
+      const filtered = cropsData.filter(item => item.crop === selectedCrop);
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No data available for ${selectedCrop}</td></tr>`;
+      } else {
+        tbody.innerHTML = "";
+        filtered.forEach(({ crop, variety, min, max, modal, market, district }) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${crop}</td>
+            <td>${variety}</td>
+            <td>₹${min.toLocaleString()}</td>
+            <td>₹${max.toLocaleString()}</td>
+            <td>₹${modal.toLocaleString()}</td>
+            <td>${market}</td>
+            <td>${district}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+      priceTable.style.display = "table";
+    }
+
+    // Navigation handlers
+    goToMarketBtn.onclick = () => {
+      mainPageDiv.style.display = "none";
+      marketPageDiv.style.display = "flex";
+      priceTable.style.display = "none";
+      cropSelect.value = "";
+    };
+
+    backBtn.onclick = () => {
+      marketPageDiv.style.display = "none";
+      mainPageDiv.style.display = "block";
+    };
+
+    // Event listeners
+    viewPricesBtn.addEventListener("click", showPrices);
+
+    // Initialize
+    populateMainPage();
+    populateCropDropdown();
+  </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farmers Tribute</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: url('https://images.pexels.com/photos/29000294/pexels-photo-29000294.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      color: white;
+      position: relative;
+    }
+
+    .quote-box {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(50, 50, 50, 0.85);
+      padding: 20px 30px;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 999;
+    }
+
+    .button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: #ff944d;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+      z-index: 999;
+    }
+
+    .button:hover {
+      background-color: #e67300;
+    }
+
+    .watermark {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-family: 'Brush Script MT', cursive;
+      font-size: 24px;
+      color: #ffd700;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quote-box">
+    <strong>🌾 "Farmers are the roots of our existence. Just as strong roots keep a tree standing, their hard work keeps the world nourished!" 🌱</strong>
+  </div>
+
+  <button class="button" onclick="window.location.href='login.html';">Click Here to Go</button>
+
+  <div class="watermark">Anil Gowda</div>
+
+</body>
+</html>

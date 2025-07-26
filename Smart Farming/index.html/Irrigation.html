@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Irrigation Schedule for Crops</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    margin: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  #searchInput {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(0,0,0,0.7);
+  }
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    cursor: default;
+  }
+  th {
+    background-color: orange;
+    color: black;
+    cursor: pointer;
+    user-select: none;
+  }
+  tr:hover {
+    background-color: rgba(255,165,0,0.3);
+  }
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: orange;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+  }
+  button:hover {
+    background-color: darkorange;
+  }
+</style>
+</head>
+<body>
+
+<h1>🌾 Irrigation Schedule for Crops 🌾</h1>
+
+<input type="text" id="searchInput" placeholder="Search..." />
+
+<table id="irrigationTable">
+  <thead>
+    <tr>
+      <th data-column="0" data-order="desc">Crop Name ▼</th>
+      <th>Irrigation Frequency</th>
+      <th>Soil Moisture Check</th>
+      <th>Best Time for Irrigation</th>
+      <th>Preferred Irrigation Method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Your full list here -->
+    <tr><td>Rice</td><td>Every 2–3 days</td><td>Soil should be wet, not flooded</td><td>Morning & Evening</td><td>Flood irrigation or sprinkler</td></tr>
+    <tr><td>Ragi (Finger Millet)</td><td>Every 4–5 days</td><td>Soil should be slightly moist</td><td>Early morning</td><td>Drip irrigation preferred</td></tr>
+    <tr><td>Jowar (Sorghum)</td><td>Once a week</td><td>Dry cracks in soil → Needs water</td><td>Before 10 AM</td><td>Drip or furrow irrigation</td></tr>
+    <tr><td>Maize (Corn)</td><td>Every 3–4 days</td><td>Insert finger 2 inches → If dry, water</td><td>Early morning or evening</td><td>Sprinkler or drip irrigation</td></tr>
+    <tr><td>Bajra (Pearl Millet)</td><td>Once a week</td><td>Soil should not be too dry</td><td>Morning (before 9 AM)</td><td>Furrow irrigation</td></tr>
+    <tr><td>Wheat</td><td>Every 3–4 days</td><td>Soil should be moist</td><td>Early morning</td><td>Sprinkler irrigation</td></tr>
+    <tr><td>Sugarcane</td><td>Every 4–5 days</td><td>Check soil moisture with stick</td><td>Morning & Evening</td><td>Drip or flood irrigation</td></tr>
+    <tr><td>Groundnut</td><td>Once a week</td><td>Soil should be slightly moist</td><td>Morning (before 10 AM)</td><td>Sprinkler irrigation</td></tr>
+    <tr><td>Sunflower</td><td>Every 3–4 days</td><td>Leaves drooping → Needs water</td><td>Morning (before 9 AM)</td><td>Drip irrigation preferred</td></tr>
+    <tr><td>Soybean</td><td>Once a week</td><td>Leaves turn pale if dry</td><td>Morning</td><td>Sprinkler or furrow irrigation</td></tr>
+    <tr><td>Tomato</td><td>Every 3–4 days</td><td>Topsoil dry → water</td><td>Morning or late evening</td><td>Drip irrigation</td></tr>
+    <tr><td>Brinjal (Eggplant)</td><td>Every 4 days</td><td>Soil cracks if dry</td><td>Early morning</td><td>Furrow or drip irrigation</td></tr>
+    <tr><td>Onion</td><td>Every 5 days</td><td>Check top 1 inch of soil</td><td>Morning (before 9 AM)</td><td>Drip irrigation preferred</td></tr>
+    <tr><td>Potato</td><td>Every 3 days</td><td>Soil should be slightly damp</td><td>Morning</td><td>Sprinkler or furrow irrigation</td></tr>
+    <tr><td>Carrot</td><td>Every 4 days</td><td>Loose moist soil needed</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Beetroot</td><td>Every 5 days</td><td>Soil should not dry out</td><td>Morning</td><td>Drip or furrow</td></tr>
+    <tr><td>Cabbage</td><td>Every 3 days</td><td>Soil should stay moist</td><td>Evening</td><td>Sprinkler irrigation</td></tr>
+    <tr><td>Cauliflower</td><td>Every 3 days</td><td>Topsoil moisture important</td><td>Morning</td><td>Drip preferred</td></tr>
+    <tr><td>Spinach</td><td>Every 2 days</td><td>Light watering needed</td><td>Early morning</td><td>Sprinkler or watering can</td></tr>
+    <tr><td>Lettuce</td><td>Every 2–3 days</td><td>Topsoil should be damp</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Chilli</td><td>Every 3–4 days</td><td>Dry leaves = water stress</td><td>Morning or evening</td><td>Drip irrigation</td></tr>
+    <tr><td>Capsicum</td><td>Every 4 days</td><td>Moist soil around root zone</td><td>Evening</td><td>Drip irrigation</td></tr>
+    <tr><td>Pumpkin</td><td>Every 4–5 days</td><td>Check leaf wilting</td><td>Morning</td><td>Flood or drip</td></tr>
+    <tr><td>Okra (Ladyfinger)</td><td>Every 3 days</td><td>Topsoil dry = water</td><td>Morning</td><td>Drip or furrow</td></tr>
+    <tr><td>Cucumber</td><td>Every 2–3 days</td><td>Check for dry vines</td><td>Evening</td><td>Sprinkler</td></tr>
+    <tr><td>Bitter Gourd</td><td>Every 3 days</td><td>Moist soil, not soggy</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Turmeric</td><td>Every 5–6 days</td><td>Finger check for moisture</td><td>Morning</td><td>Furrow irrigation</td></tr>
+    <tr><td>Ginger</td><td>Every 5 days</td><td>Ensure moist rhizome bed</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Garlic</td><td>Every 5 days</td><td>Top 2 inches moist</td><td>Evening</td><td>Sprinkler</td></tr>
+    <tr><td>Peas</td><td>Every 3–4 days</td><td>Check for wilting leaves</td><td>Morning</td><td>Sprinkler</td></tr>
+    <tr><td>Mustard</td><td>Once a week</td><td>Deep root moisture</td><td>Morning</td><td>Flood or furrow</td></tr>
+    <tr><td>Barley</td><td>Every 4–5 days</td><td>Field surface dry = irrigate</td><td>Morning</td><td>Furrow irrigation</td></tr>
+    <tr><td>Almond</td><td>Every 7–10 days</td><td>Moisture deep in soil</td><td>Early morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Apple</td><td>Every 7 days</td><td>Soil should be moist but not waterlogged</td><td>Morning</td><td>Sprinkler or drip</td></tr>
+    <tr><td>Orange</td><td>Every 7 days</td><td>Check for dry soil around roots</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Mango</td><td>Every 10 days</td><td>Soil moist but not soggy</td><td>Morning</td><td>Drip or basin irrigation</td></tr>
+    <tr><td>Banana</td><td>Every 3 days</td><td>Check soil moisture regularly</td><td>Morning & evening</td><td>Flood or drip</td></tr>
+    <tr><td>Guava</td><td>Every 7 days</td><td>Moist soil important</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Pomegranate</td><td>Every 7–10 days</td><td>Check soil moisture</td><td>Early morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Cashew</td><td>Every 10 days</td><td>Soil moisture moderate</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Cotton</td><td>Every 7 days</td><td>Moist soil</td><td>Morning</td><td>Furrow or drip</td></tr>
+    <tr><td>Tea</td><td>Every 5 days</td><td>Soil moist</td><td>Morning</td><td>Sprinkler</td></tr>
+    <tr><td>Coffee</td><td>Every 5 days</td><td>Moist soil</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Chickpea</td><td>Every 7 days</td><td>Check soil dryness</td><td>Morning</td><td>Furrow irrigation</td></tr>
+    <tr><td>Lentil</td><td>Once a week</td><td>Soil moist</td><td>Morning</td><td>Flood irrigation</td></tr>
+    <tr><td>Green gram (Moong)</td><td>Every 7 days</td><td>Check soil moisture</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Black gram (Urad)</td><td>Every 7 days</td><td>Moist soil required</td><td>Morning</td><td>Drip or sprinkler</td></tr>
+    <tr><td>Foxtail millet</td><td>Once a week</td><td>Soil should not dry</td><td>Morning</td><td>Furrow irrigation</td></tr>
+    <tr><td>Kodo millet</td><td>Once a week</td><td>Moist soil</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Job's Tears (Coix lacryma-jobi)</td><td>Every 7 days</td><td>Moist soil required</td><td>Morning</td><td>Furrow irrigation</td></tr>
+    <tr><td>Amaranth</td><td>Every 3 days</td><td>Check soil moisture</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Watermelon</td><td>Every 3–4 days</td><td>Moist soil</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Cantaloupe</td><td>Every 3 days</td><td>Check soil dryness</td><td>Morning</td><td>Sprinkler or drip</td></tr>
+    <tr><td>Chickory</td><td>Every 3 days</td><td>Soil moist but not soggy</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Asparagus</td><td>Every 4 days</td><td>Keep soil moist</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Celery</td><td>Every 2–3 days</td><td>Soil moist</td><td>Morning</td><td>Drip irrigation</td></tr>
+    <tr><td>Radish</td><td>Every 2–3 days</td><td>Moist soil required</td><td>Morning</td><td>Sprinkler irrigation</td></tr>
+    <tr><td>Turnip</td><td>Every 4 days</td><td>Keep soil moist</td><td>Morning</td><td>Drip irrigation</td></tr>
+  </tbody>
+</table>
+
+<button onclick="window.print()">Print Schedule</button>
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const table = document.getElementById('irrigationTable');
+  const tbody = table.tBodies[0];
+  const rows = Array.from(tbody.rows);
+
+  // Filter function on input
+  searchInput.addEventListener('input', () => {
+    const filter = searchInput.value.toLowerCase();
+    rows.forEach(row => {
+      const cropName = row.cells[0].textContent.toLowerCase();
+      row.style.display = cropName.includes(filter) ? '' : 'none';
+    });
+  });
+
+  // Sorting by Crop Name column
+  const th = table.tHead.rows[0].cells[0];
+  th.addEventListener('click', () => {
+    const order = th.getAttribute('data-order');
+    const newOrder = order === 'desc' ? 'asc' : 'desc';
+    th.setAttribute('data-order', newOrder);
+    th.textContent = `Crop Name ${newOrder === 'asc' ? '▲' : '▼'}`;
+
+    rows.sort((a, b) => {
+      const nameA = a.cells[0].textContent.toLowerCase();
+      const nameB = b.cells[0].textContent.toLowerCase();
+      if (nameA < nameB) return newOrder === 'asc' ? -1 : 1;
+      if (nameA > nameB) return newOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    // Re-append sorted rows to tbody
+    rows.forEach(row => tbody.appendChild(row));
+  });
+</script>
+
+</body>
+</html>

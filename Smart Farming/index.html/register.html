@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('https://images.pexels.com/photos/29000294/pexels-photo-29000294.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .register-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      width: 300px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .register-btn {
+      background-color: #2196f3;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .register-btn:hover {
+      background-color: #1976d2;
+    }
+
+    .link {
+      margin-top: 15px;
+      display: block;
+      color: #1565c0;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <h2>Register</h2>
+    <input type="text" id="register-username" placeholder="Username" required>
+    <input type="email" placeholder="Email" required>
+    <input type="password" placeholder="Password" required>
+    <button class="register-btn" onclick="registerUser()">Register</button>
+    <a href="login.html" class="link">Already have an account? Login</a>
+  </div>
+
+  <script>
+    function registerUser() {
+      const username = document.getElementById("register-username").value;
+      if (username.trim()) {
+        localStorage.setItem("username", username);
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Please enter your username");
+      }
+    }
+  </script>
+
+</body>
+</html>

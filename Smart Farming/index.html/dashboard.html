@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farmer Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #183D3D;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 20px;
+      font-size: 22px;
+      color: #ffffff;
+    }
+
+    .sidebar button {
+      background-color: #FFA500;
+      border: none;
+      padding: 12px 15px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: background-color 0.3s;
+    }
+
+    .sidebar button:hover {
+      background-color: #e69500;
+    }
+
+    .main {
+      flex: 1;
+      background: url('https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      padding: 40px;
+      color: white;
+    }
+
+    .welcome {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
+
+    .card-container {
+      display: flex;
+      gap: 20px;
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+    }
+
+    .card {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 25px 35px;
+      border-radius: 10px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .card:hover {
+      background-color: rgba(0, 0, 0, 0.85);
+      transform: scale(1.02);
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      background-color: #FF6600;
+    }
+
+    .logout-btn:hover {
+      background-color: #cc5200;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>🌿 KRISHI  मित्र</h2>
+    <button onclick="location.href='crop-predictor.html'">🌱 Crop Predictor</button>
+    <button onclick="location.href='fertilizer-predictor.html'">💊 Fertilizer Predictor</button>
+    <button onclick="location.href='market-prices.html'">💰 Market Prices</button>
+    <button onclick="location.href='weather-report.html'">🌦 Weather Report</button>
+    <button onclick="location.href='govt-schemes.html'">📜 Govt. Schemes</button>
+    <button class="logout-btn" onclick="logout()">🔒 Logout</button>
+  </div>
+
+  <div class="main">
+    <div class="welcome" id="welcome-message">👨‍🌾 Welcome!</div>
+
+    <div class="card-container">
+      <div class="card" onclick="location.href='Crop-Suggestions.html'">🌾 20+ Crop Suggestions</div>
+      <div class="card" onclick="location.href='Fertilizers.html'">💊 Best Fertilizers Available</div>
+      <div class="card" onclick="location.href='Irrigation.html'">💧 Irrigation Guide</div>
+    </div>
+  </div>
+
+  <script>
+    const username = localStorage.getItem("username");
+    const welcome = document.getElementById("welcome-message");
+    if (username) {
+      welcome.textContent = `👨‍🌾 Welcome, ${username}!`;
+    } else {
+      welcome.textContent = "👨‍🌾 Welcome, Farmer!";
+    }
+
+    function logout() {
+      localStorage.removeItem("username");
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+</html>

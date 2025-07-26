@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crop Predictor – Indian Locations</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background: url('https://images.pexels.com/photos/29000294/pexels-photo-29000294.jpeg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .back-btn:hover {
+      background-color: #218838;
+    }
+    .card {
+      background-color: rgba(0, 0, 50, 0.85);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 1;
+    }
+    .card h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    .autocomplete {
+      position: relative;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #ff4b5c;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #e43e4c;
+    }
+    .autocomplete-items {
+      position: absolute;
+      background: white;
+      color: black;
+      border-radius: 0 0 6px 6px;
+      z-index: 1000;
+      width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      flex-grow: 1;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .autocomplete-items div {
+      padding: 10px;
+      cursor: pointer;
+    }
+    .autocomplete-items div:hover,
+    .autocomplete-active {
+      background-color: #f1f1f1;
+    }
+    .result {
+      background-color: #f8f9fa;
+      color: black;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="dashboard.html" class="back-btn">⬅ Back to Dashboard</a>
+
+  <div class="card">
+    <h2>🌾 Crop Predictor</h2>
+
+    <div class="autocomplete">
+      <input id="placeInput" type="text" placeholder="Enter a city, district, or state..." />
+    </div>
+
+    <select id="seasonSelect">
+      <option value="">-- Select Season --</option>
+      <option>Rabi</option>
+      <option>Kharif</option>
+      <option>Zaid</option>
+    </select>
+
+    <button id="predictBtn">🚜 Predict Crops</button>
+
+    <div id="resultContainer"></div>
+  </div>
+
+  <script>
+    const places = [
+      // Extensive list of Indian states and cities
+      "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh",
+      "Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand",
+      "Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur",
+      "Meghalaya","Mizoram","Nagaland","Odisha","Punjab",
+      "Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura",
+      "Uttar Pradesh","Uttarakhand","West Bengal",
+      "Delhi","Puducherry","Jammu & Kashmir","Ladakh",
+      "Lakshadweep","Andaman & Nicobar Islands",
+      // Major cities
+      "Agra","Ahmedabad","Amritsar","Aurangabad","Bengaluru","Bhopal",
+      "Chandigarh","Chennai","Coimbatore","Dehradun","Delhi","Gandhinagar",
+      "Gurugram","Guwahati","Hyderabad","Imphal","Jaipur","Jaisalmer",
+      "Jammu","Jodhpur","Kochi","Kolkata","Lucknow","Madurai",
+      "Mangalore","Mumbai","Nagpur","Patna","Pune","Ranchi",
+      "Srinagar","Thiruvananthapuram","Varanasi","Visakhapatnam",
+      "Vijayawada","Bhubaneswar","Raipur","Panaji","Shillong",
+      "Shimla","Agartala","Itanagar","Kohima","Bikaner",
+      "Deoghar","Gaya","Silchar","Tirupati","Kota","Udaipur","Alwar",
+      "Bareilly","Meerut","Moradabad","Noida","Faridabad",
+      // You can append more as needed
+      "Karnataka", "Bengaluru Urban", "Bengaluru Rural", "Mysuru",
+      "Mangalore", "Hubballi-Dharwad", "Bijapur", "Belagavi", "Ballari",
+      "Davanagere", "Tumakuru", "Kalaburagi", "Ballari", "Shimoga",
+      "Udupi", "Chikmagalur", "Mandya", "Chitradurga", "Hassan",
+      "Bidar", "Raichur", "Gulbarga", "Chamarajanagar", "Yadgir",
+      "Haveri", "Ranebennur", "Bagalkot", "Kolar", "Ramnagara",
+      "Chikkaballapura", "Kodagu", "Koppal", "Bellary",
+
+      "Tamil Nadu", "Chennai", "Coimbatore", "Madurai", "Salem",
+      "Tiruchirappalli", "Tirunelveli", "Vellore", "Erode", "Tambaram",
+      "Tiruppur", "Thanjavur", "Rameswaram",
+
+      "Kerala", "Thiruvananthapuram", "Kochi", "Kozhikode", "Kannur",
+      "Thrissur", "Alappuzha", "Kollam", "Kottayam", "Palakkad",
+      "Ernakulam", "Malappuram",
+
+      "Andhra Pradesh", "Hyderabad", "Vijayawada", "Visakhapatnam",
+      "Tirupati", "Guntur", "Warangal", "Nellore", "Rajahmundry",
+      "Anantapur",
+
+      "Telangana", "Hyderabad", "Warangal", "Nizamabad", "Khammam",
+      "Karimnagar", "Ramachandrapuram", "Adilabad",
+
+      // Other southern states/districts continued...
+      "Andhra Pradesh", "Anantapur", "Chittoor", "East Godavari",
+      "Guntur District", "Krishna District", "Prakasam", "Sri Potti Sriramulu Nellore",
+      "Srikakulam", "Visakhapatnam District", "West Godavari",
+
+      "Tamil Nadu", "Chennai District", "Coimbatore District", "Karur", "Nagapattinam",
+      "Namakkal", "Perambalur", "Pudukkottai", "Tirupur", "Tiruvannamalai"
+    ].sort();
+
+    function initAutocomplete(inp, arr) {
+      let currentFocus;
+      inp.addEventListener("input", function(){
+        const val = this.value;
+        closeAllLists();
+        if (!val) return false;
+        currentFocus = -1;
+
+        const list = document.createElement("DIV");
+        list.setAttribute("class","autocomplete-items");
+        this.parentNode.appendChild(list);
+
+        arr.filter(item => item.toLowerCase().startsWith(val.toLowerCase()))
+           .forEach(item => {
+             const itemDiv = document.createElement("DIV");
+             itemDiv.innerHTML = "<strong>" + item.substr(0,val.length) + "</strong>" + item.substr(val.length);
+             itemDiv.innerHTML += "<input type='hidden' value='" + item + "'>";
+             itemDiv.addEventListener("click", function() {
+               inp.value = this.getElementsByTagName("input")[0].value;
+               closeAllLists();
+             });
+             list.appendChild(itemDiv);
+           });
+      });
+
+      inp.addEventListener("keydown", function(e) {
+        let list = document.getElementsByClassName("autocomplete-items")[0];
+        if (list) {
+          let items = list.getElementsByTagName("div");
+          if (e.keyCode == 40) currentFocus = (currentFocus + 1) % items.length, setActive(items);
+          if (e.keyCode == 38) currentFocus = (currentFocus - 1 + items.length) % items.length, setActive(items);
+          if (e.keyCode == 13) {
+            e.preventDefault();
+            if (currentFocus > -1) items[currentFocus].click();
+          }
+        }
+      });
+
+      function setActive(items) {
+        for (let el of items) el.classList.remove("autocomplete-active");
+        if (items[currentFocus]) items[currentFocus].classList.add("autocomplete-active");
+      }
+
+      function closeAllLists(elmnt) {
+        document.querySelectorAll(".autocomplete-items").forEach(el => {
+          if (elmnt != el && elmnt != inp) el.remove();
+        });
+      }
+      document.addEventListener("click", closeAllLists);
+    }
+
+    initAutocomplete(document.getElementById("placeInput"), places);
+
+    document.getElementById("predictBtn").addEventListener("click", () => {
+      const place = document.getElementById("placeInput").value.trim();
+      const season = document.getElementById("seasonSelect").value;
+      const result = document.getElementById("resultContainer");
+      result.innerHTML = "";
+      if (!place || !season) return alert("Please select both a place and a season.");
+
+      // Mock response (use real data/API as needed)
+      const soil = "Loamy to Alluvial";
+      const rainfall = season === "Kharif" ? "800–1200 mm" : season === "Rabi" ? "400–700 mm" : "300–500 mm";
+      const temp = season === "Rabi" ? "15–25 °C" : "25–35 °C";
+      const crops = season === "Kharif" ? "Rice, Maize, Cotton"
+                   : season === "Rabi" ? "Wheat, Barley, Mustard"
+                   : "Vegetables, Watermelon, Millets";
+
+      result.innerHTML = `
+        <div class="result">
+          <h3>🌾 Recommended for ${place} in ${season}</h3>
+          <p><strong>Soil Type:</strong> ${soil}</p>
+          <p><strong>Avg Rainfall:</strong> ${rainfall}</p>
+          <p><strong>Avg Temperature:</strong> ${temp}</p>
+          <p><strong>Suggested Crops:</strong> ${crops}</p>
+        </div>`;
+    });
+  </script>
+
+</body>
+</html>
